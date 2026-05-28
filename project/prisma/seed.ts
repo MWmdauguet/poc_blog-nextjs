@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 import { PrismaClient } from '../app/generated/prisma'
+import argon2 from 'argon2'
 
 const adapter = new PrismaMariaDb(process.env.DATABASE_URL!)
 const prisma = new PrismaClient({ adapter })
@@ -13,13 +14,13 @@ async function main() {
   }
 
   const admin = await prisma.user.create({
-    data: { pseudo: 'admin', email: 'admin@example.com', password: 'hashed_password', role: 'admin' },
+    data: { pseudo: 'admin', email: 'admin@example.com', password: await argon2.hash('password123', { type: argon2.argon2i }), role: 'admin' },
   })
   const alice = await prisma.user.create({
-    data: { pseudo: 'alice', email: 'alice@example.com', password: 'hashed_password', role: 'user' },
+    data: { pseudo: 'alice', email: 'alice@example.com', password: await argon2.hash('password123', { type: argon2.argon2i }), role: 'user' },
   })
   const bob = await prisma.user.create({
-    data: { pseudo: 'bob', email: 'bob@example.com', password: 'hashed_password', role: 'user' },
+    data: { pseudo: 'bob', email: 'bob@example.com', password: await argon2.hash('password123', { type: argon2.argon2i }), role: 'user' },
   })
   console.log('✅ Users insérés')
 
