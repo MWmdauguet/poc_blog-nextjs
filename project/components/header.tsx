@@ -1,8 +1,10 @@
 "use client"; 
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { removeSessionCookie } from '@/lib/session';
+
 
 const links = [
   { href: '/', label: 'Accueil' },
@@ -13,6 +15,12 @@ const links = [
 export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  async function handleLogout() {
+    await removeSessionCookie();
+    router.push('/');
+  }
 
   return (
     <header className="border-b border-gray-200 bg-white">
@@ -41,9 +49,12 @@ export default function Header() {
           <Link href="/login" className="text-sm px-3 py-1.5 border border-gray-200 rounded-md hover:bg-gray-50">
             Connexion
           </Link>
-          <Link href="/register" className="hidden md:block text-sm px-3 py-1.5 bg-gray-900 text-white rounded-md hover:bg-gray-800">
+          <Link href="/register" className="text-sm px-3 py-1.5 border border-gray-200 rounded-md hover:bg-gray-50">
             S'inscrire
           </Link>
+          <button onClick={() =>{ handleLogout(); }} className="text-sm px-3 py-1.5 border border-gray-200 rounded-md hover:bg-gray-50">
+            Se Déconnecter
+          </button>
           <button
             className="md:hidden border border-gray-200 rounded-md p-1.5"
             onClick={() => setOpen(!open)}

@@ -11,3 +11,8 @@ export async function setSessionCookie(token: string) {
     path: '/',
   })
 }
+
+export async function removeSessionCookie() {
+    const cookieStore = await cookies()
+    cookieStore.delete('session');
+}
