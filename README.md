@@ -14,11 +14,16 @@
 login: admin@example.com
 password: password123
 
-### Users
+#### Users
 login: alice@example.com
 password: password123
 
 login: bob@example.com
 password: password123
+
+#### Base de données
+host: mysql
+username: root
+password: root
 
 ### arborescence 
