@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
-import { setSessionCookie } from '../action/login'
+import { setSessionCookie } from '../../lib/session'
 
 type LoginForm = {
   email: string
