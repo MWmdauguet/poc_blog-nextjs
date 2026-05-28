@@ -12,7 +12,7 @@ up:
 
 db:
 	${COMPOSE} exec nextjs npx prisma generate
-	${COMPOSE} exec nextjs npx prisma migrate reset  
+	${COMPOSE} exec nextjs npx prisma migrate reset --force
 	${COMPOSE} exec nextjs npx prisma db seed
 
 logs:
