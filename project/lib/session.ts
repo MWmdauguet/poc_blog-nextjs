@@ -1,4 +1,5 @@
 'use server';
+import { verifyToken } from '@/lib/jwt'
 
 import { cookies } from 'next/headers'
 
@@ -15,4 +16,18 @@ export async function setSessionCookie(token: string) {
 export async function removeSessionCookie() {
     const cookieStore = await cookies()
     cookieStore.delete('session');
+}
+
+export async function getSessionCookie() {
+  const cookieStore = await cookies()
+  const session = cookieStore.get('session');
+
+  if (!session) return null;
+
+  try {
+    const payload = verifyToken(session.value)
+    return payload;
+  } catch {
+    return null;
+  }
 }

@@ -12,31 +12,62 @@ datasource db {
   provider = "mysql"
 }
 
-
-model Blog {
+model BlogPost {
   id Int @id @default(autoincrement())
   title String
   content String?  @db.Text
-  picture String
-  published Boolean  @default(false)
+  picture String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   publishedById Int?
-  publishedBy   User?     @relation("PublishedBy", fields: [publishedById], references: [id])
-  lockedById  Int?
-  lockedBy    User?     @relation("LockedBy", fields: [lockedById], references: [id])
-  lockedAt    DateTime?
+  publishedBy User? @relation("PublishedBy", fields: [publishedById], references: [id])
+  lockedById Int?
+  lockedBy User? @relation("LockedBy", fields: [lockedById], references: [id])
+  lockedAt DateTime?
+}
+
+model Interest {
+  id Int @id @default(autoincrement())
+  name String @unique
+  users UserInterests[]
+}
+
+model UserInterests {
+  id Int @id @default(autoincrement())
+  userId Int
+  interestId Int
+  user User @relation(fields: [userId], references: [id])
+  interest Interest @relation(fields: [interestId], references: [id])
+
+  @@unique([userId, interestId])
 }
 
 model User {
   id Int @id @default(autoincrement())
   pseudo String
-  email String
+  picture String?
+  biography String?
+  email String @unique
   password String
   role String @default("user")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  publishedBlogs Blog[]  @relation("PublishedBy")
-  lockedBlogs    Blog[]  @relation("LockedBy")
+  lockedById     Int?
+  lockedAt DateTime?
+  lockedBy User? @relation("LockedBy", fields: [lockedById], references: [id])
+  publishedBlogs BlogPost[]  @relation("PublishedBy")
+  lockedBlogs BlogPost[] @relation("LockedBy")
+  lockedUsers User[] @relation("LockedBy")
+  interests UserInterests[]
+}
+
+model Page {
+  id Int @id @default(autoincrement())
+  slug String @unique
+  title String
+  content String?  @db.Text
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 

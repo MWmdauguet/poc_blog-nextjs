@@ -17,27 +17,36 @@ async function main() {
     data: { pseudo: 'admin', email: 'admin@example.com', password: await argon2.hash('password123', { type: argon2.argon2i }), role: 'admin' },
   })
   const alice = await prisma.user.create({
-    data: { pseudo: 'alice', email: 'alice@example.com', password: await argon2.hash('password123', { type: argon2.argon2i }), role: 'user' },
+    data: { pseudo: 'alice', email: 'alice@example.com', biography: "Student IT", password: await argon2.hash('password123', { type: argon2.argon2i }), role: 'user' },
   })
   const bob = await prisma.user.create({
     data: { pseudo: 'bob', email: 'bob@example.com', password: await argon2.hash('password123', { type: argon2.argon2i }), role: 'user' },
   })
   console.log('✅ Users insérés')
 
-  await prisma.blog.createMany({
+  await prisma.blogPost.createMany({
     data: [
-      { title: 'Article Alice 1', content: "Contenu du premier article d'Alice.", picture: 'https://picsum.photos/seed/alice1/800/400', published: true, publishedById: alice.id },
-      { title: 'Article Alice 2', content: "Contenu du deuxième article d'Alice.", picture: 'https://picsum.photos/seed/alice2/800/400', published: true, publishedById: alice.id },
-      { title: 'Article Alice 3', content: "Brouillon d'Alice.", picture: 'https://picsum.photos/seed/alice3/800/400', published: false },
-      { title: 'Article Bob 1', content: "Contenu du premier article de Bob.", picture: 'https://picsum.photos/seed/bob1/800/400', published: true, publishedById: bob.id },
-      { title: 'Article Bob 2', content: "Contenu du deuxième article de Bob.", picture: 'https://picsum.photos/seed/bob2/800/400', published: true, publishedById: bob.id },
-      { title: 'Article Bob 3', content: "Brouillon de Bob verrouillé.", picture: 'https://picsum.photos/seed/bob3/800/400', published: false, lockedById: admin.id, lockedAt: new Date() },
-      { title: 'Article Admin 1', content: "Premier article de l'admin.", picture: 'https://picsum.photos/seed/admin1/800/400', published: true, publishedById: admin.id },
-      { title: 'Article Admin 2', content: "Deuxième article de l'admin.", picture: 'https://picsum.photos/seed/admin2/800/400', published: true, publishedById: admin.id },
-      { title: 'Article Admin 3', content: "Brouillon de l'admin.", picture: 'https://picsum.photos/seed/admin3/800/400', published: false, publishedById: admin.id },
+      { title: 'Article Alice 1', content: "Contenu du premier article d'Alice.", picture: 'https://picsum.photos/seed/alice1/800/400', publishedById: alice.id },
+      { title: 'Article Alice 2', content: "Contenu du deuxième article d'Alice bloqué.", picture: 'https://picsum.photos/seed/alice2/800/400', publishedById: alice.id, lockedById: admin.id, lockedAt: new Date() },
+      { title: 'Article Alice 3', content: "Contenu du troisième article d'Alice.", picture: 'https://picsum.photos/seed/alice3/800/400', publishedById: alice.id},
+      { title: 'Article Bob 1', content: "Contenu du premier article de Bob.", picture: 'https://picsum.photos/seed/bob1/800/400', publishedById: bob.id },
+      { title: 'Article Bob 2', content: "Contenu du deuxième article de Bob.", picture: 'https://picsum.photos/seed/bob2/800/400', publishedById: bob.id },
+      { title: 'Article Bob 3', content: "Contenu du troisième de Bob bloqué.", picture: 'https://picsum.photos/seed/bob3/800/400', publishedById: bob.id, lockedById: admin.id, lockedAt: new Date() },
+      { title: 'Article Admin 1', content: "Premier article de l'admin.", picture: 'https://picsum.photos/seed/admin1/800/400', publishedById: admin.id },
+      { title: 'Article Admin 2', content: "Deuxième article de l'admin.", picture: 'https://picsum.photos/seed/admin2/800/400', publishedById: admin.id },
     ],
   })
   console.log('✅ Blogs insérés')
+
+  await prisma.page.create({
+    data: {
+      title: 'A propos de nous !',
+      content: 'contenu de la page',
+      slug: 'about',
+      published: true
+    }
+  })
+  console.log('✅ Page insérée')
   console.log('🌱 Toutes les fixtures insérées')
 }
 

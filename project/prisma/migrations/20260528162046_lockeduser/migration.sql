@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE `User` ADD COLUMN `lockedAt` DATETIME(3) NULL,
+    ADD COLUMN `lockedById` INTEGER NULL;
+
+-- AddForeignKey
+ALTER TABLE `User` ADD CONSTRAINT `User_lockedById_fkey` FOREIGN KEY (`lockedById`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
