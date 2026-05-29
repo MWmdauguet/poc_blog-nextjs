@@ -1,10 +1,17 @@
 
 import { notFound } from 'next/navigation'
-import { getDynamicPage } from '../action/dynamicPage';
+import { getPublishedDynamicPage } from '../action/dynamicPage';
+
+export async function genereteMetadata({ params }: { params: Promise<{ slug: string }>}) {
+    return{
+        title: `${((await params).slug)}`,
+        description:  `Page ${((await params).slug)} de la plateforme`
+    }
+}
 
 export default async function DynamicPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const page = await getDynamicPage(slug);
+    const page = await getPublishedDynamicPage(slug);
 
     if (!page) {
         notFound()

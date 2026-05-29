@@ -31,6 +31,14 @@ export async function getBlogPost(id: number) {
     }
 }
 
+export async function getNotLockedBlogPost(id: number) {
+    try {
+        return await prisma.blogPost.findUnique({ where: { id, lockedAt: null} })
+    } catch {
+        return null;
+    }
+}
+
 export async function getAllBlogPost(page = 1, limit = 10) {
     try {
         const [posts, total] = await prisma.$transaction([
@@ -65,4 +73,18 @@ export async function getAllUserBlogPost(page = 1, limit = 10) {
     } catch {
         return { posts: [], total: 0, totalPages: 0 };
     }
+}
+
+export async function lockedBlogPost(id: number, data: {locked: boolean}) {
+    const payload = await getSessionCookie();
+    if(!payload) return null;
+    const lockedInformation = data.locked
+        ? { lockedById: payload.id, lockedAt: new Date() }
+        : { lockedById: null, lockedAt: null }
+    
+    const blogPost = await prisma.blogPost.update({
+        where: { id },
+        data: lockedInformation
+    })
+    revalidatePath(`/blog/${blogPost.publishedById}/post/${id}`)
 }

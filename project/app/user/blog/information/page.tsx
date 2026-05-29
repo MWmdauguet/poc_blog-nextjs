@@ -3,6 +3,11 @@ import { getSessionCookie } from '@/lib/session'
 import { notFound } from 'next/navigation'
 import BlogInformationForm from './blogInformationForm'
 
+export const metadata = {
+  title: 'Informtions blog utilisateur',
+  description: 'Page information blog utilisateur de la plateforme',
+}
+
 export default async function BlogInformationPage() {
   const payload = await getSessionCookie()
   if (!payload) notFound()

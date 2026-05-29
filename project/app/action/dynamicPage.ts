@@ -27,6 +27,13 @@ export async function deleteDynamicPage(slug: string) {
 
 export async function getDynamicPage(slug: string) {
     const page = await prisma.page.findFirst({
+        where: { slug }
+    })
+    return page;
+}
+
+export async function getPublishedDynamicPage(slug: string) {
+    const page = await prisma.page.findFirst({
         where: { slug, published: true }
     })
     return page;
