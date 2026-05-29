@@ -1,5 +1,5 @@
 'use server';
-import { verifyToken } from '@/lib/jwt'
+import { verifyToken, JwtPayload } from '@/lib/jwt'
 
 import { cookies } from 'next/headers'
 
@@ -18,7 +18,7 @@ export async function removeSessionCookie() {
     cookieStore.delete('session');
 }
 
-export async function getSessionCookie() {
+export async function getSessionCookie(): Promise<JwtPayload | null>  {
   const cookieStore = await cookies()
   const session = cookieStore.get('session');
 
